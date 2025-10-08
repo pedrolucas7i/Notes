@@ -85,7 +85,7 @@
 
 <body>
     <div id="container">
-        <textarea id="input" placeholder="Escreva suas tarefas em Markdown..."></textarea>
+        <textarea id="input"></textarea>
         <div id="preview"></div>
     </div>
 
@@ -93,6 +93,43 @@
         const input = document.getElementById("input");
         const preview = document.getElementById("preview");
         const STORAGE_KEY = "minhasNotasMarkdown";
+
+        // --- Lista de 150 alimentos comuns em Portugal ---
+        const alimentos = [
+            "Arroz", "Feijão", "Batata", "Tomate", "Cebola", "Alho", "Azeite", "Pão", "Leite", "Ovos",
+            "Carne de vaca", "Carne de porco", "Frango", "Peixe", "Atum", "Sardinha", "Bacalhau", "Cenoura",
+            "Couve", "Espinafre", "Alface", "Brócolos", "Abóbora", "Pepino", "Pimento", "Salsa", "Coentros",
+            "Maçã", "Pera", "Laranja", "Limão", "Banana", "Morango", "Uva", "Melão", "Melancia", "Kiwi",
+            "Avelã", "Amêndoa", "Noz", "Castanha", "Amendoim", "Queijo", "Iogurte", "Manteiga", "Natas",
+            "Cerveja", "Vinho", "Água", "Sumo de laranja", "Sumo de maçã", "Café", "Chá", "Chocolate", 
+            "Açúcar", "Sal", "Pimenta", "Vinagre", "Mostarda", "Mel", "Arroz integral", "Massa", "Espaguete",
+            "Macarrão", "Aveia", "Cuscuz", "Feijão preto", "Feijão vermelho", "Lentilhas", "Grão-de-bico",
+            "Sopa de legumes", "Hambúrguer", "Salsicha", "Presunto", "Fiambre", "Mortadela", "Polvo", "Camarão",
+            "Lula", "Ostras", "Amêijoas", "Mexilhões", "Bife", "Carne de cordeiro", "Perú", "Pato", "Gambas",
+            "Batata-doce", "Rabanete", "Beterraba", "Couve-flor", "Espargos", "Cogumelos", "Aipo", "Alcaparras",
+            "Azeitonas", "Abacate", "Frutos secos", "Gelatina", "Bolachas", "Bolo", "Pudim", "Creme", "Chouriço",
+            "Salpicão", "Caril", "Molho de tomate", "Molho béchamel", "Mostarda Dijon", "Ketchup", "Maionese",
+            "Iogurte natural", "Queijo fresco", "Queijo curado", "Ricota", "Mozarela", "Parmesão", "Cebola roxa",
+            "Cebolinho", "Hortelã", "Manjericão", "Alecrim", "Tomilho", "Orégãos", "Funcho", "Gengibre", "Alcaparras",
+            "Pimenta-do-reino", "Pimenta vermelha", "Páprica", "Canela", "Noz-moscada", "Cravinho", "Anis",
+            "Coentros secos", "Sementes de abóbora", "Sementes de girassol", "Sementes de sésamo", "Levedo de cerveja",
+            "Massa folhada", "Massa quebrada", "Farinha", "Fermento", "Bicarbonato de sódio", "Leite condensado",
+            "Leite evaporado", "Cacau em pó", "Café solúvel", "Açúcar mascavado", "Açúcar em pó", "Sal marinho",
+            "Vinagre balsâmico", "Vinagre de vinho", "Molho de soja", "Molho inglês", "Pimenta caiena"
+        ];
+
+        // --- Função para escolher alimento aleatório ---
+        function getAlimentoAleatorio() {
+            const index = Math.floor(Math.random() * alimentos.length);
+            return alimentos[index];
+        }
+
+        // --- Inicializar textarea com alimento aleatório ---
+        function initPlaceholder() {
+            if (!localStorage.getItem(STORAGE_KEY)) {
+                input.placeholder = getAlimentoAleatorio();
+            }
+        }
 
         // --- Carregar notas do localStorage ---
         function loadNotes() {
@@ -109,12 +146,7 @@
         function renderMarkdown(text) {
             return text
                 .replace(/^(\s*)- \[ \] (.*)$/gm, '$1<label><input type="checkbox"><span>$2</span></label>')
-                .replace(/^(\s*)- \[x\] (.*)$/gm, '$1<label><input type="checkbox" checked> <span class="done">$2</span></label>')
-                .replace(/^### (.*)$/gm, "<h3>$1</h3>")
-                .replace(/^## (.*)$/gm, "<h2>$1</h2>")
-                .replace(/^# (.*)$/gm, "<h1>$1</h1>")
-                .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
-                .replace(/\*(.*?)\*/g, "<em>$1</em>");
+                .replace(/^(\s*)- \[x\] (.*)$/gm, '$1<label><input type="checkbox" checked> <span class="done">$2</span></label>');
         }
 
         // --- Atualiza visualização e salva ---
@@ -168,6 +200,7 @@
         input.addEventListener("scroll", syncScroll);
 
         // --- Inicialização ---
+        initPlaceholder();
         loadNotes();
         update();
     </script>
