@@ -26,7 +26,6 @@
             max-width: 700px;
         }
 
-        /* ÁREA DE TEXTO INVISÍVEL */
         #input {
             position: absolute;
             top: 0;
@@ -38,9 +37,7 @@
             outline: none;
             background: transparent;
             color: transparent;
-            /* invisível */
             caret-color: black;
-            /* mantém o cursor */
             font: var(--font);
             line-height: var(--line-height);
             padding: var(--padding);
@@ -52,11 +49,8 @@
         label span {
             display: inline-block;
             margin-left: 2em;
-            /* deixa o texto começar mais à direita, mesmo sem mudar a checkbox */
         }
 
-
-        /* VISUALIZAÇÃO */
         #preview {
             border: 1px solid #ccc;
             border-radius: 10px;
@@ -98,8 +92,20 @@
     <script>
         const input = document.getElementById("input");
         const preview = document.getElementById("preview");
+        const STORAGE_KEY = "minhasNotasMarkdown";
 
-        // --- Função que converte markdown simples em HTML ---
+        // --- Carregar notas do localStorage ---
+        function loadNotes() {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (saved) input.value = saved;
+        }
+
+        // --- Salvar notas no localStorage ---
+        function saveNotes() {
+            localStorage.setItem(STORAGE_KEY, input.value);
+        }
+
+        // --- Converte Markdown simples em HTML ---
         function renderMarkdown(text) {
             return text
                 .replace(/^(\s*)- \[ \] (.*)$/gm, '$1<label><input type="checkbox"><span>$2</span></label>')
@@ -111,19 +117,18 @@
                 .replace(/\*(.*?)\*/g, "<em>$1</em>");
         }
 
-        // --- Atualiza visualização em tempo real ---
+        // --- Atualiza visualização e salva ---
         function update() {
             preview.innerHTML = renderMarkdown(input.value);
             attachCheckboxEvents();
             syncScroll();
+            saveNotes();
         }
 
-        // --- Sincroniza rolagem ---
         function syncScroll() {
             preview.scrollTop = input.scrollTop;
         }
 
-        // --- Checkbox interativo ---
         function attachCheckboxEvents() {
             preview.querySelectorAll("input[type='checkbox']").forEach((cb, i) => {
                 cb.addEventListener("change", () => {
@@ -146,7 +151,7 @@
             });
         }
 
-        // --- Adiciona nova linha "- [ ]" ao pressionar Enter ---
+        // --- Nova linha com Enter ---
         input.addEventListener("keydown", (e) => {
             if (e.key === "Enter") {
                 e.preventDefault();
@@ -161,6 +166,9 @@
 
         input.addEventListener("input", update);
         input.addEventListener("scroll", syncScroll);
+
+        // --- Inicialização ---
+        loadNotes();
         update();
     </script>
 </body>
