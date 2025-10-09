@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- See https://cordova.apache.org/docs/en/latest/config_ref/index.html for more information on this file -->
+
+<widget xmlns="http://www.w3.org/ns/widgets"
+	xmlns:cdv="http://cordova.apache.org/ns/1.0"
+	id="com.pedrolucas7i.notes"
+	version="1.0.0">
+
+  <!-- The name that will appear on the device's home screen -->
+  <name>Notes</name>
+
+  <!-- These may appear in app store listings -->
+  <description>Notes App</description>
+  <author email="pedrolucas.core7i@gmail.com" href="https://github.com/pedrolucas7i">
+    Pedro Lucas
+  </author>
+
+  <!-- The app's icon, displayed on the home page -->
+  <!-- See https://cordova.apache.org/docs/en/latest/config_ref/images.html for details -->
+  <icon src="resources/iconTemplate.png" />
+
+  <!-- Splashscreen -->
+  <!-- See https://cordova.apache.org/docs/en/latest/core/features/splashscreen/index.html for details -->
+  <preference name="SplashScreenDelay" value="2000" />
+  <preference name="SplashScreenBackgroundColor" value="#fce549" />
+
+  <!-- iOS -->
+  <platform name="ios">
+    <!-- include iOS specific preferences here -->
+  </platform>
+
+  <!-- Android -->
+  <platform name="android">
+    <!-- Android specific splashscreen settings -->
+    <preference name="AndroidWindowSplashScreenAnimatedIcon" value="resources/splashTemplate.png" />
+  </platform>
+
+  <!-- Plugins - these cannot be inside of platform tags -->
+  <!-- This plugin creates a global device object that grants the
+       app access to information about the device's
+       hardware/software -->
+  <plugin name="cordova-plugin-device" spec="^3.0.0" />
+
+</widget>
