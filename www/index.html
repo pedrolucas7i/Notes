@@ -1,235 +1,502 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
-<meta name="theme-color" content="#ffffff" />
-<title>Notas — Alma</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <meta name="theme-color" content="#ffffff" />
+  <title>Notas — Alma</title>
 
-<!-- Cordova placeholder (Cordova incluirá cordova.js em build) -->
-<script src="cordova.js"></script>
+  <!-- Cordova placeholder (Cordova incluirá cordova.js em build) -->
+  <script src="cordova.js"></script>
 
-<style>
-  /* =========================
+  <style>
+    /* =========================
      VARIÁVEIS GLOBAIS (tema Apple-like)
      ========================= */
-  :root{
-    --bg: #fbfbfc;
-    --card: #ffffff;
-    --muted: #9aa0a6;
-    --text: #111217;
-    --accent: #007aff;
-    --shadow: 0 6px 20px rgba(15,20,30,0.08);
-    --glass: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(250,250,250,0.96));
-    --radius: 16px;
-    --radius-sm: 10px;
-    --glass-opa: rgba(255,255,255,0.7);
-    --transition: cubic-bezier(.22,.9,.27,1);
-    --ui-gap: 14px;
-    --ui-pad: 14px;
-    --font-base: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
-  }
+    :root {
+      --bg: #fbfbfc;
+      --card: #ffffff;
+      --muted: #9aa0a6;
+      --text: #111217;
+      --accent: #007aff;
+      --shadow: 0 6px 20px rgba(15, 20, 30, 0.08);
+      --glass: linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(250, 250, 250, 0.96));
+      --radius: 16px;
+      --radius-sm: 10px;
+      --glass-opa: rgba(255, 255, 255, 0.7);
+      --transition: cubic-bezier(.22, .9, .27, 1);
+      --ui-gap: 14px;
+      --ui-pad: 14px;
+      --font-base: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+    }
 
-  /* ===== Reset + body ===== */
-  *{box-sizing:border-box}
-  html,body{height:100%}
-  body{
-    margin:0;
-    font-family:var(--font-base);
-    background: linear-gradient(180deg,#f7f8fa,var(--bg));
-    color:var(--text);
-    -webkit-font-smoothing:antialiased;
-    -moz-osx-font-smoothing:grayscale;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    padding:24px;
-  }
+    /* ===== Reset + body ===== */
+    * {
+      box-sizing: border-box
+    }
 
-  /* ===== App shell ===== */
-  .app{
-    width:100%;
-    max-width:1100px;
-    height:85vh;
-    background:var(--bg);
-    border-radius:24px;
-    box-shadow: 0 30px 80px rgba(12,18,28,0.14);
-    display:grid;
-    grid-template-columns: 300px 1fr;
-    overflow:hidden;
-    position:relative;
-  }
+    html,
+    body {
+      height: 100%
+    }
 
-  /* ===== Sidebar ===== */
-  .sidebar{
-    padding:18px;
-    background: linear-gradient(180deg, rgba(255,255,255,0.6), rgba(255,255,255,0.35));
-    backdrop-filter: blur(8px) saturate(120%);
-    border-right: 1px solid rgba(20,20,20,0.03);
-    display:flex;
-    flex-direction:column;
-    gap:12px;
-  }
+    body {
+      margin: 0;
+      font-family: var(--font-base);
+      background: linear-gradient(180deg, #f7f8fa, var(--bg));
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
 
-  .brand{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    padding-bottom:6px;
-  }
-  .logo{
-    width:44px;height:44px;border-radius:12px;
-    display:flex;align-items:center;justify-content:center;
-    background:linear-gradient(180deg,var(--card),#f2f6ff);
-    box-shadow: var(--shadow);
-    border:1px solid rgba(0,0,0,0.03);
-  }
-  .logo svg{width:22px;height:22px;opacity:0.95}
-  .title{font-weight:600;font-size:16px}
-  .subtitle{font-size:12px;color:var(--muted)}
+    /* ===== App shell ===== */
+    .app {
+      width: 100%;
+      max-width: 1100px;
+      height: 85vh;
+      background: var(--bg);
+      border-radius: 24px;
+      box-shadow: 0 30px 80px rgba(12, 18, 28, 0.14);
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      overflow: hidden;
+      position: relative;
+    }
 
-  /* Filtros / pesquisa */
-  .search{
-    display:flex;
-    gap:8px;
-    align-items:center;
-    background:var(--card);
-    border-radius:12px;
-    padding:8px;
-    box-shadow: var(--shadow);
-  }
-  .search input{
-    border:0;outline:none;background:transparent;width:100%;font-size:14px;padding:8px;
-  }
-  .filters{
-    display:flex;flex-wrap:wrap;gap:8px;margin-top:6px;
-  }
-  .chip{
-    background:transparent;border:1px solid rgba(0,0,0,0.06);
-    padding:6px 10px;border-radius:999px;font-size:13px;color:var(--muted);
-    cursor:pointer;transition:all .18s var(--transition);
-  }
-  .chip.active{background:var(--accent);color:white;border-color:transparent;box-shadow:0 6px 20px rgba(0,122,255,0.12)}
+    /* ===== Sidebar ===== */
+    .sidebar {
+      padding: 18px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.35));
+      backdrop-filter: blur(8px) saturate(120%);
+      border-right: 1px solid rgba(20, 20, 20, 0.03);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
 
-  /* Pastas virtuais */
-  .folders{margin-top:8px;display:flex;flex-direction:column;gap:8px}
-  .folder{display:flex;align-items:center;gap:10px;padding:8px;border-radius:12px;cursor:pointer}
-  .folder:hover{background:rgba(0,0,0,0.03)}
-  .folder .dot{width:10px;height:10px;border-radius:50%}
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding-bottom: 6px;
+    }
 
-  /* Lista de notas */
-  .note-list{
-    margin-top:8px;
-    overflow:auto;
-    padding-right:6px;
-    display:flex;flex-direction:column;gap:10px;
-  }
-  .note-item{
-    display:flex;flex-direction:column;
-    gap:6px;padding:10px;border-radius:12px;background:var(--card);
-    box-shadow: var(--shadow);
-    transition:transform .18s var(--transition), box-shadow .18s var(--transition);
-    cursor:pointer;
-  }
-  .note-item:hover{transform:translateY(-4px)}
-  .note-title{font-weight:600}
-  .note-meta{font-size:12px;color:var(--muted);display:flex;gap:8px;align-items:center;justify-content:space-between}
-  .note-tags{display:flex;gap:6px;align-items:center}
+    .logo {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(180deg, var(--card), #f2f6ff);
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(0, 0, 0, 0.03);
+    }
 
-  /* Main editor */
-  .main{
-    padding:20px;
-    display:flex;
-    flex-direction:column;
-    gap:12px;
-    position:relative;
-  }
+    .logo svg {
+      width: 22px;
+      height: 22px;
+      opacity: 0.95
+    }
 
-  .toolbar{
-    display:flex;align-items:center;justify-content:space-between;gap:10px;
-  }
-  .toolbar-left{display:flex;gap:8px;align-items:center}
-  .btn{
-    background:var(--card);border-radius:12px;padding:8px 12px;border:1px solid rgba(0,0,0,0.04);
-    box-shadow: var(--shadow);cursor:pointer;font-weight:600;
-  }
-  .btn.ghost{background:transparent;box-shadow:none;border:0;color:var(--muted)}
-  .btn.accent{background:linear-gradient(180deg,var(--accent),#0060d6);color:white;border:0}
+    .title {
+      font-weight: 600;
+      font-size: 16px
+    }
 
-  /* Editor + preview split */
-  .editor-wrap{
-    display:grid;
-    grid-template-columns: 1fr 460px;
-    gap:18px;
-    align-items:start;
-    height: calc(85vh - 160px);
-  }
-  .editor, .preview{
-    background:var(--card);
-    border-radius:18px;
-    padding:18px;
-    box-shadow: var(--shadow);
-    overflow:auto;
-    min-height:240px;
-  }
+    .subtitle {
+      font-size: 12px;
+      color: var(--muted)
+    }
 
-  /* textarea editing area styled like iA Writer */
-  .editor textarea{
-    width:100%;height:100%;border:0;outline:none;resize:none;
-    font-size:16px;font-family: var(--font-base); line-height:1.6;
-    background:transparent;color:var(--text);
-    padding:0;margin:0;
-  }
+    /* Filtros / pesquisa */
+    .search {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      background: var(--card);
+      border-radius: 12px;
+      padding: 8px;
+      box-shadow: var(--shadow);
+    }
 
-  /* preview Markdown */
-  .preview h1,.preview h2,.preview h3{margin:8px 0}
-  .preview p{margin:6px 0}
-  .preview code{font-family:monospace;padding:2px 6px;border-radius:6px;background:rgba(0,0,0,0.04)}
-  .preview ul{padding-left:18px}
-  .preview label{display:flex;align-items:center;gap:8px}
-  .preview input[type="checkbox"]{width:18px;height:18px;transform:scale(1.02);cursor:pointer}
+    .search input {
+      border: 0;
+      outline: none;
+      background: transparent;
+      width: 100%;
+      font-size: 14px;
+      padding: 8px;
+    }
 
-  /* Floating action buttons */
-  .fab{
-    position: absolute; right:20px; bottom:20px; display:flex;flex-direction:column;gap:12px;
-  }
-  .fab .circle{
-    width:56px;height:56px;border-radius:999px;background:var(--accent);display:flex;align-items:center;justify-content:center;color:white;box-shadow:0 12px 30px rgba(0,122,255,0.24);cursor:pointer;font-size:20px;
-  }
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 6px;
+    }
 
-  /* Zen / focus mode overlay */
-  .zen{
-    position:absolute;inset:0;background:rgba(255,255,255,0.92);display:flex;align-items:center;justify-content:center;z-index:60;opacity:0;pointer-events:none;transition:opacity .28s var(--transition);
-  }
-  .zen.active{opacity:1;pointer-events:auto}
-  .zen .box{width:80%;max-width:900px;padding:36px;border-radius:18px;background:var(--card);box-shadow: var(--shadow);}
+    .chip {
+      background: transparent;
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 13px;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all .18s var(--transition);
+    }
 
-  /* Small UI pieces */
-  .meta-row{display:flex;gap:12px;align-items:center;font-size:13px;color:var(--muted)}
-  .tag-pill{padding:6px 8px;border-radius:999px;background:rgba(0,0,0,0.04);font-size:13px}
+    .chip.active {
+      background: var(--accent);
+      color: white;
+      border-color: transparent;
+      box-shadow: 0 6px 20px rgba(0, 122, 255, 0.12)
+    }
 
-  /* Responsive */
-  @media (max-width:900px){
-    .app{grid-template-columns: 1fr; height:92vh}
-    .sidebar{order:2;display:flex;flex-direction:row;overflow:auto}
-    .editor-wrap{grid-template-columns:1fr;grid-auto-rows:1fr}
-    .preview{order:2}
-    .note-list{flex-direction:row;gap:8px;overflow:auto}
-  }
+    /* Pastas virtuais */
+    .folders {
+      margin-top: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px
+    }
 
-  /* Micro animation: subtle bounce */
-  .bounce{
-    animation: bounce .36s var(--transition);
-  }
-  @keyframes bounce {
-    0%{transform:translateY(0)}
-    50%{transform:translateY(-6px)}
-    100%{transform:translateY(0)}
-  }
+    .folder {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px;
+      border-radius: 12px;
+      cursor: pointer
+    }
 
-  /* Accessibility focus */
-  :focus{outline: 3px solid rgba(0,122,255,0.12);outline-offset:3px}
-</style>
+    .folder:hover {
+      background: rgba(0, 0, 0, 0.03)
+    }
+
+    .folder .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%
+    }
+
+    /* Lista de notas */
+    .note-list {
+      margin-top: 8px;
+      overflow: auto;
+      padding-right: 6px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .note-item {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      padding: 10px;
+      border-radius: 12px;
+      background: var(--card);
+      box-shadow: var(--shadow);
+      transition: transform .18s var(--transition), box-shadow .18s var(--transition);
+      cursor: pointer;
+    }
+
+    .note-item:hover {
+      transform: translateY(-4px)
+    }
+
+    .note-title {
+      font-weight: 600
+    }
+
+    .note-meta {
+      font-size: 12px;
+      color: var(--muted);
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      justify-content: space-between
+    }
+
+    .note-tags {
+      display: flex;
+      gap: 6px;
+      align-items: center
+    }
+
+    /* Main editor */
+    .main {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      position: relative;
+    }
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .toolbar-left {
+      display: flex;
+      gap: 8px;
+      align-items: center
+    }
+
+    .btn {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 8px 12px;
+      border: 1px solid rgba(0, 0, 0, 0.04);
+      box-shadow: var(--shadow);
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .btn.ghost {
+      background: transparent;
+      box-shadow: none;
+      border: 0;
+      color: var(--muted)
+    }
+
+    .btn.accent {
+      background: linear-gradient(180deg, var(--accent), #0060d6);
+      color: white;
+      border: 0
+    }
+
+    /* ===== Editor / Preview modo alternado ===== */
+    .editor-wrap {
+      position: relative;
+      height: calc(85vh - 160px);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .editor,
+    .preview {
+      position: absolute;
+      inset: 0;
+      background: var(--card);
+      border-radius: 18px;
+      padding: 20px;
+      box-shadow: var(--shadow);
+      overflow: auto;
+      transition: opacity .3s var(--transition), transform .3s var(--transition);
+    }
+
+    .editor {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .preview {
+      width: 100%;
+      height: calc(85vh - 160px);
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(10px);
+    }
+
+    #previewInner {
+      width: 100%;
+      height: calc(85vh - 160px);
+      overflow: auto;
+    }
+
+    .editor-wrap.show-preview .editor {
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-10px);
+    }
+
+    .editor-wrap.show-preview .preview {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
+    .editor textarea {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      outline: none;
+      resize: none;
+      font-size: 16px;
+      font-family: var(--font-base);
+      line-height: 1.6;
+      background: transparent;
+      color: var(--text);
+    }
+
+    .preview h1,
+    .preview h2,
+    .preview h3 {
+      margin: 8px 0
+    }
+
+    .preview p {
+      margin: 6px 0
+    }
+
+    .preview code {
+      font-family: monospace;
+      padding: 2px 6px;
+      border-radius: 6px;
+      background: rgba(0, 0, 0, 0.04)
+    }
+
+    .preview ul {
+      padding-left: 18px
+    }
+
+    .preview label {
+      display: flex;
+      align-items: center;
+      gap: 8px
+    }
+
+    .preview input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      transform: scale(1.02);
+      cursor: pointer
+    }
+
+    /* Floating action buttons */
+    .fab {
+      position: absolute;
+      right: 20px;
+      bottom: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .fab .circle {
+      width: 56px;
+      height: 56px;
+      border-radius: 999px;
+      background: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      box-shadow: 0 12px 30px rgba(0, 122, 255, 0.24);
+      cursor: pointer;
+      font-size: 20px;
+    }
+
+    /* Zen / focus mode overlay */
+    .zen {
+      position: absolute;
+      inset: 0;
+      background: rgba(255, 255, 255, 0.92);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 60;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .28s var(--transition);
+    }
+
+    .zen.active {
+      opacity: 1;
+      pointer-events: auto
+    }
+
+    .zen .box {
+      width: 80%;
+      max-width: 900px;
+      padding: 36px;
+      border-radius: 18px;
+      background: var(--card);
+      box-shadow: var(--shadow);
+    }
+
+    /* Small UI pieces */
+    .meta-row {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      font-size: 13px;
+      color: var(--muted)
+    }
+
+    .tag-pill {
+      padding: 6px 8px;
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.04);
+      font-size: 13px
+    }
+
+    /* Responsive */
+    @media (max-width:900px) {
+      .app {
+        grid-template-columns: 1fr;
+        height: 92vh
+      }
+
+      .sidebar {
+        order: 2;
+        display: flex;
+        flex-direction: row;
+        overflow: auto
+      }
+
+      .editor-wrap {
+        grid-template-columns: 1fr;
+        grid-auto-rows: 1fr
+      }
+
+      .preview {
+        order: 2
+      }
+
+      .note-list {
+        flex-direction: row;
+        gap: 8px;
+        overflow: auto
+      }
+    }
+
+    /* Micro animation: subtle bounce */
+    .bounce {
+      animation: bounce .36s var(--transition);
+    }
+
+    @keyframes bounce {
+      0% {
+        transform: translateY(0)
+      }
+
+      50% {
+        transform: translateY(-6px)
+      }
+
+      100% {
+        transform: translateY(0)
+      }
+    }
+
+    /* Accessibility focus */
+    :focus {
+      outline: 3px solid rgba(0, 122, 255, 0.12);
+      outline-offset: 3px
+    }
+  </style>
 </head>
 
 <body>
@@ -241,8 +508,13 @@
           <!-- Minimal icon SVG -->
           <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect x="4" y="4" width="16" height="16" rx="4" fill="white" />
-            <path d="M8 9h8M8 13h8" stroke="url(#g)" stroke-width="1.6" stroke-linecap="round"/>
-            <defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#007aff"/><stop offset="1" stop-color="#0047b3"/></linearGradient></defs>
+            <path d="M8 9h8M8 13h8" stroke="url(#g)" stroke-width="1.6" stroke-linecap="round" />
+            <defs>
+              <linearGradient id="g" x1="0" x2="1">
+                <stop offset="0" stop-color="#007aff" />
+                <stop offset="1" stop-color="#0047b3" />
+              </linearGradient>
+            </defs>
           </svg>
         </div>
         <div>
@@ -252,7 +524,9 @@
       </div>
 
       <div class="search" role="search">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M21 21l-4.35-4.35" stroke="#9aa0a6" stroke-width="1.6" stroke-linecap="round"/></svg>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+          <path d="M21 21l-4.35-4.35" stroke="#9aa0a6" stroke-width="1.6" stroke-linecap="round" />
+        </svg>
         <input id="q" placeholder="Pesquisar notas / #tag / texto" aria-label="Pesquisar notas">
       </div>
 
@@ -294,13 +568,16 @@
       <!-- Editor + Preview -->
       <div class="editor-wrap">
         <section class="editor" aria-label="Editor">
-          <input id="noteTitle" placeholder="Título automática..." aria-label="Título da nota" style="font-size:20px;font-weight:700;border:0;outline:none;margin-bottom:10px;" />
-          <textarea id="editorArea" placeholder="Começa a escrever... Markdown suportado. Lista de tarefas: - [ ] comprar leite" spellcheck="true"></textarea>
+          <input id="noteTitle" placeholder="Título automática..." aria-label="Título da nota"
+            style="font-size:20px;font-weight:700;border:0;outline:none;margin-bottom:10px;" />
+          <textarea id="editorArea"
+            placeholder="Começa a escrever... Markdown suportado. Lista de tarefas: - [ ] comprar leite"
+            spellcheck="true"></textarea>
         </section>
 
         <aside class="preview" aria-label="Pré-visualização (Markdown)">
           <!-- Renderização markdown -->
-          <div id="previewInner" tabindex="0"></div>
+          <div id="previewInner" tabindex="0" width="100%" height="100%"></div>
         </aside>
       </div>
 
@@ -308,8 +585,11 @@
       <div class="zen" id="zen">
         <div class="box">
           <div style="font-size:20px;font-weight:700;margin-bottom:8px">Modo Zen</div>
-          <div style="color:var(--muted);margin-bottom:12px">Foca só na escrita — pressiona Foco novamente para sair.</div>
-          <div><textarea id="zenArea" style="width:100%;height:40vh;border-radius:12px;padding:14px;border:1px solid rgba(0,0,0,0.04);outline:none"></textarea></div>
+          <div style="color:var(--muted);margin-bottom:12px">Foca só na escrita — pressiona Foco novamente para sair.
+          </div>
+          <div><textarea id="zenArea"
+              style="width:100%;height:40vh;border-radius:12px;padding:14px;border:1px solid rgba(0,0,0,0.04);outline:none"></textarea>
+          </div>
         </div>
       </div>
 
@@ -324,607 +604,607 @@
   <!-- Small audio feedback (data URI, soft click) -->
   <audio id="clickSound" src="data:audio/mp3;base64,//uQZAAAAAAAAAAAAAAAAAAAA..."></audio>
 
-<script>
-/* ======================================================
-   ALMA — Single-file Notes App
-   - Português (comentários)
-   - Offline-first, PWA-ready (manifest+sw via Blob)
-   - Markdown minimal + tasks + tags + folders + versions
-   - Autosave, backups, export/import, share, pomodoro, stats
-   ====================================================== */
+  <script>
+    /* ======================================================
+       ALMA — Single-file Notes App
+       - Português (comentários)
+       - Offline-first, PWA-ready (manifest+sw via Blob)
+       - Markdown minimal + tasks + tags + folders + versions
+       - Autosave, backups, export/import, share, pomodoro, stats
+       ====================================================== */
 
-/* ----------------------
-   STORAGE KEYS & CONFIG
-   ---------------------- */
-const APP_KEY = 'alma-notes-v1';
-const BACKUP_KEY = 'alma-backups';
-const BACKUP_INTERVAL_MIN = 5; // backup automático (minutos)
-const AUTOSAVE_MS = 700; // debounce
-const MAX_VERSIONS = 40;
+    /* ----------------------
+       STORAGE KEYS & CONFIG
+       ---------------------- */
+    const APP_KEY = 'alma-notes-v1';
+    const BACKUP_KEY = 'alma-backups';
+    const BACKUP_INTERVAL_MIN = 5; // backup automático (minutos)
+    const AUTOSAVE_MS = 700; // debounce
+    const MAX_VERSIONS = 40;
 
-/* ----------------------
-   APP STATE
-   ---------------------- */
-let state = {
-  notes: [],          // array de notas {id,title,content,tags,folder,favorite,pinned,created,modified,versions:[]}
-  activeId: null,
-  filters: { q:'', tag: null, folder: null },
-  folders: ['Pessoal','Projetos','Ideias'],
-  autosaveTimer: null,
-  backupTimer: null,
-};
+    /* ----------------------
+       APP STATE
+       ---------------------- */
+    let state = {
+      notes: [],          // array de notas {id,title,content,tags,folder,favorite,pinned,created,modified,versions:[]}
+      activeId: null,
+      filters: { q: '', tag: null, folder: null },
+      folders: ['Pessoal', 'Projetos', 'Ideias'],
+      autosaveTimer: null,
+      backupTimer: null,
+    };
 
-/* ----------------------
-   ELEMENTS
-   ---------------------- */
-const q = id => document.getElementById(id);
-const editor = q('editorArea');
-const titleInput = q('noteTitle');
-const previewInner = q('previewInner');
-const listContainer = document.querySelector('.note-list');
-const foldersList = q('foldersList');
-const tagFilter = q('tagFilter');
-const searchInput = q('q');
-const metaRow = q('metaRow');
-const statNotes = q('statNotes');
-const statTasks = q('statTasks');
-const zen = q('zen');
-const zenArea = q('zenArea');
-const clickSound = q('clickSound');
+    /* ----------------------
+       ELEMENTS
+       ---------------------- */
+    const q = id => document.getElementById(id);
+    const editor = q('editorArea');
+    const titleInput = q('noteTitle');
+    const previewInner = q('previewInner');
+    const listContainer = document.querySelector('.note-list');
+    const foldersList = q('foldersList');
+    const tagFilter = q('tagFilter');
+    const searchInput = q('q');
+    const metaRow = q('metaRow');
+    const statNotes = q('statNotes');
+    const statTasks = q('statTasks');
+    const zen = q('zen');
+    const zenArea = q('zenArea');
+    const clickSound = q('clickSound');
 
-/* ----------------------
-   UTILS
-   ---------------------- */
-function uid(prefix='n'){ return prefix + Date.now().toString(36) + Math.random().toString(36).slice(2,8); }
-function now(){ return new Date().toISOString(); }
-function debounce(fn,ms){ let t; return (...a)=>{ clearTimeout(t); t=setTimeout(()=>fn(...a),ms); } }
-function clamp(n,a,b){return Math.max(a,Math.min(b,n));}
-function safeParse(s){ try{return JSON.parse(s);}catch(e){return null;} }
+    /* ----------------------
+       UTILS
+       ---------------------- */
+    function uid(prefix = 'n') { return prefix + Date.now().toString(36) + Math.random().toString(36).slice(2, 8); }
+    function now() { return new Date().toISOString(); }
+    function debounce(fn, ms) { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); } }
+    function clamp(n, a, b) { return Math.max(a, Math.min(b, n)); }
+    function safeParse(s) { try { return JSON.parse(s); } catch (e) { return null; } }
 
-/* ----------------------
-   STORAGE: carregar / guardar
-   ---------------------- */
-function saveApp(){
-  // Remover campos pesados se necessário e gravar
-  localStorage.setItem(APP_KEY, JSON.stringify(state));
-}
-function loadApp(){
-  const raw = localStorage.getItem(APP_KEY);
-  if(raw){
-    const parsed = safeParse(raw);
-    if(parsed && parsed.notes) state = Object.assign(state, parsed);
-  } else {
-    // primeira vez: cria nota de boas-vindas
-    const id = uid();
-    state.notes.push({
-      id, title: 'Boas-vindas', content: `# Boas-vindas\n\nEste é o teu novo caderno. Escreve algo — o título será sugerido automaticamente.\n\n- [ ] Exemplo de tarefa\n\n#ideias #pessoal`, tags:['#ideias','#pessoal'], folder:'Pessoal', favorite:true, pinned:false, created:now(), modified:now(), versions:[]
-    });
-    state.activeId = id;
-    saveApp();
-  }
-}
+    /* ----------------------
+       STORAGE: carregar / guardar
+       ---------------------- */
+    function saveApp() {
+      // Remover campos pesados se necessário e gravar
+      localStorage.setItem(APP_KEY, JSON.stringify(state));
+    }
+    function loadApp() {
+      const raw = localStorage.getItem(APP_KEY);
+      if (raw) {
+        const parsed = safeParse(raw);
+        if (parsed && parsed.notes) state = Object.assign(state, parsed);
+      } else {
+        // primeira vez: cria nota de boas-vindas
+        const id = uid();
+        state.notes.push({
+          id, title: 'Boas-vindas', content: `# Boas-vindas\n\nEste é o teu novo caderno. Escreve algo — o título será sugerido automaticamente.\n\n- [ ] Exemplo de tarefa\n\n#ideias #pessoal`, tags: ['#ideias', '#pessoal'], folder: 'Pessoal', favorite: true, pinned: false, created: now(), modified: now(), versions: []
+        });
+        state.activeId = id;
+        saveApp();
+      }
+    }
 
-/* ----------------------
-   VERSIONS / BACKUP
-   ---------------------- */
-function pushVersion(note){
-  if(!note) return;
-  note.versions = note.versions || [];
-  note.versions.unshift({ts: now(), title: note.title, content: note.content});
-  if(note.versions.length > MAX_VERSIONS) note.versions.pop();
-  saveApp();
-}
-function performBackup(){
-  const backups = safeParse(localStorage.getItem(BACKUP_KEY)) || [];
-  backups.unshift({ts: now(), snapshot: JSON.parse(JSON.stringify(state))});
-  // keep last 20 backups
-  localStorage.setItem(BACKUP_KEY, JSON.stringify(backups.slice(0,20)));
-}
+    /* ----------------------
+       VERSIONS / BACKUP
+       ---------------------- */
+    function pushVersion(note) {
+      if (!note) return;
+      note.versions = note.versions || [];
+      note.versions.unshift({ ts: now(), title: note.title, content: note.content });
+      if (note.versions.length > MAX_VERSIONS) note.versions.pop();
+      saveApp();
+    }
+    function performBackup() {
+      const backups = safeParse(localStorage.getItem(BACKUP_KEY)) || [];
+      backups.unshift({ ts: now(), snapshot: JSON.parse(JSON.stringify(state)) });
+      // keep last 20 backups
+      localStorage.setItem(BACKUP_KEY, JSON.stringify(backups.slice(0, 20)));
+    }
 
-/* ----------------------
-   NOTE CRUD
-   ---------------------- */
-function createNote({title='',content='',tags=[],folder='Pessoal',favorite=false,pinned=false} = {}){
-  const id = uid();
-  const note = {id,title,content,tags,folder,favorite,pinned,created:now(),modified:now(),versions:[]};
-  state.notes.unshift(note);
-  state.activeId = id;
-  pushVersion(note);
-  saveApp();
-  renderAll();
-  microFeedback('create');
-  return note;
-}
-function deleteNote(id){
-  const idx = state.notes.findIndex(n=>n.id===id);
-  if(idx>=0) { state.notes.splice(idx,1); if(state.activeId===id) state.activeId = state.notes[0]?.id || null; saveApp(); renderAll(); microFeedback('delete'); }
-}
-function updateNote(id,changes){
-  const note = state.notes.find(n=>n.id===id);
-  if(!note) return;
-  Object.assign(note, changes);
-  note.modified = now();
-  saveApp();
-  renderAll();
-}
+    /* ----------------------
+       NOTE CRUD
+       ---------------------- */
+    function createNote({ title = '', content = '', tags = [], folder = 'Pessoal', favorite = false, pinned = false } = {}) {
+      const id = uid();
+      const note = { id, title, content, tags, folder, favorite, pinned, created: now(), modified: now(), versions: [] };
+      state.notes.unshift(note);
+      state.activeId = id;
+      pushVersion(note);
+      saveApp();
+      renderAll();
+      microFeedback('create');
+      return note;
+    }
+    function deleteNote(id) {
+      const idx = state.notes.findIndex(n => n.id === id);
+      if (idx >= 0) { state.notes.splice(idx, 1); if (state.activeId === id) state.activeId = state.notes[0]?.id || null; saveApp(); renderAll(); microFeedback('delete'); }
+    }
+    function updateNote(id, changes) {
+      const note = state.notes.find(n => n.id === id);
+      if (!note) return;
+      Object.assign(note, changes);
+      note.modified = now();
+      saveApp();
+      renderAll();
+    }
 
-/* ----------------------
-   RENDER: lista de notas e sidebar
-   ---------------------- */
-function extractTags(text){
-  const tags = new Set();
-  (text || '').match(/#[\p{L}\w\-]+/gu)?.forEach(t=>tags.add(t));
-  return Array.from(tags);
-}
-function suggestTitle(content){
-  // Sugestão simples: primeira linha sem markdown ou as primeiras 6 palavras
-  if(!content) return 'Sem título';
-  const lines = content.split('\n').map(l=>l.trim()).filter(Boolean);
-  if(lines.length===0) return 'Sem título';
-  const first = lines[0].replace(/^#+\s*/,'').replace(/\[( |x)\]\s*/,'').slice(0,80);
-  if(first.length>2) return first;
-  // fallback
-  const joined = content.replace(/\n/g,' ').replace(/\s+/g,' ').trim();
-  return joined.split(' ').slice(0,6).join(' ') || 'Sem título';
-}
+    /* ----------------------
+       RENDER: lista de notas e sidebar
+       ---------------------- */
+    function extractTags(text) {
+      const tags = new Set();
+      (text || '').match(/#[\p{L}\w\-]+/gu)?.forEach(t => tags.add(t));
+      return Array.from(tags);
+    }
+    function suggestTitle(content) {
+      // Sugestão simples: primeira linha sem markdown ou as primeiras 6 palavras
+      if (!content) return 'Sem título';
+      const lines = content.split('\n').map(l => l.trim()).filter(Boolean);
+      if (lines.length === 0) return 'Sem título';
+      const first = lines[0].replace(/^#+\s*/, '').replace(/\[( |x)\]\s*/, '').slice(0, 80);
+      if (first.length > 2) return first;
+      // fallback
+      const joined = content.replace(/\n/g, ' ').replace(/\s+/g, ' ').trim();
+      return joined.split(' ').slice(0, 6).join(' ') || 'Sem título';
+    }
 
-function renderSidebar(){
-  // Folders
-  foldersList.innerHTML = '';
-  state.folders.forEach(f=>{
-    const node = document.createElement('div');
-    node.className = 'folder';
-    node.innerHTML = `<div style="display:flex;gap:8px;align-items:center">
+    function renderSidebar() {
+      // Folders
+      foldersList.innerHTML = '';
+      state.folders.forEach(f => {
+        const node = document.createElement('div');
+        node.className = 'folder';
+        node.innerHTML = `<div style="display:flex;gap:8px;align-items:center">
         <div class="dot" style="background:${colorForString(f)}"></div>
         <div style="font-weight:600">${f}</div>
       </div>
-      <div style="margin-left:auto;color:var(--muted);font-size:13px">${state.notes.filter(n=>n.folder===f).length}</div>`;
-    node.onclick = ()=>{ state.filters.folder = f; renderAll(); };
-    foldersList.appendChild(node);
-  });
+      <div style="margin-left:auto;color:var(--muted);font-size:13px">${state.notes.filter(n => n.folder === f).length}</div>`;
+        node.onclick = () => { state.filters.folder = f; renderAll(); };
+        foldersList.appendChild(node);
+      });
 
-  // Tag chips (collect tags across notes)
-  const tagset = new Map();
-  state.notes.forEach(n=> (n.tags||[]).forEach(t=>tagset.set(t, (tagset.get(t)||0)+1)));
-  tagFilter.innerHTML = '';
-  Array.from(tagset.keys()).slice(0,30).forEach(tag=>{
-    const el = document.createElement('button');
-    el.className = 'chip' + ((state.filters.tag===tag)?' active':'');
-    el.textContent = `${tag} ${tagset.get(tag)?'•':''}`;
-    el.onclick = ()=>{ state.filters.tag = (state.filters.tag===tag?null:tag); renderAll(); };
-    tagFilter.appendChild(el);
-  });
-}
-
-/* Helper color for tags/folders */
-function colorForString(s){
-  // gerar cor suave a partir da string
-  let h=0;
-  for(let i=0;i<s.length;i++){ h = (h<<5)-h + s.charCodeAt(i); h |= 0; }
-  const hue = Math.abs(h) % 360;
-  return `linear-gradient(180deg,hsl(${hue} 70% 65% / 1), hsl(${(hue+20)%360} 60% 55% / 1))`;
-}
-
-/* Render notes list */
-function renderNotesList(){
-  // remove old list, create container
-  let list = document.querySelector('.note-list');
-  if(!list){
-    list = document.createElement('div'); list.className='note-list';
-    document.querySelector('.sidebar').appendChild(list);
-  }
-  list.innerHTML = '';
-  const filtered = state.notes.filter(n=>{
-    // search
-    if(state.filters.q){
-      const q = state.filters.q.toLowerCase();
-      if(!(n.title?.toLowerCase().includes(q) || n.content?.toLowerCase().includes(q) || (n.tags||[]).join(' ').toLowerCase().includes(q))) return false;
+      // Tag chips (collect tags across notes)
+      const tagset = new Map();
+      state.notes.forEach(n => (n.tags || []).forEach(t => tagset.set(t, (tagset.get(t) || 0) + 1)));
+      tagFilter.innerHTML = '';
+      Array.from(tagset.keys()).slice(0, 30).forEach(tag => {
+        const el = document.createElement('button');
+        el.className = 'chip' + ((state.filters.tag === tag) ? ' active' : '');
+        el.textContent = `${tag} ${tagset.get(tag) ? '•' : ''}`;
+        el.onclick = () => { state.filters.tag = (state.filters.tag === tag ? null : tag); renderAll(); };
+        tagFilter.appendChild(el);
+      });
     }
-    if(state.filters.tag && !(n.tags||[]).includes(state.filters.tag)) return false;
-    if(state.filters.folder && n.folder !== state.filters.folder) return false;
-    return true;
-  });
 
-  filtered.forEach(n=>{
-    const item = document.createElement('div');
-    item.className = 'note-item';
-    if(n.id===state.activeId) item.style.border = '1px solid rgba(0,122,255,0.12)';
-    item.innerHTML = `<div style="display:flex;gap:8px;align-items:center">
-        <div style="width:10px;height:10px;border-radius:50%;background:${(n.favorite? '#ffbf00' : '#d0d6db')};"></div>
+    /* Helper color for tags/folders */
+    function colorForString(s) {
+      // gerar cor suave a partir da string
+      let h = 0;
+      for (let i = 0; i < s.length; i++) { h = (h << 5) - h + s.charCodeAt(i); h |= 0; }
+      const hue = Math.abs(h) % 360;
+      return `linear-gradient(180deg,hsl(${hue} 70% 65% / 1), hsl(${(hue + 20) % 360} 60% 55% / 1))`;
+    }
+
+    /* Render notes list */
+    function renderNotesList() {
+      // remove old list, create container
+      let list = document.querySelector('.note-list');
+      if (!list) {
+        list = document.createElement('div'); list.className = 'note-list';
+        document.querySelector('.sidebar').appendChild(list);
+      }
+      list.innerHTML = '';
+      const filtered = state.notes.filter(n => {
+        // search
+        if (state.filters.q) {
+          const q = state.filters.q.toLowerCase();
+          if (!(n.title?.toLowerCase().includes(q) || n.content?.toLowerCase().includes(q) || (n.tags || []).join(' ').toLowerCase().includes(q))) return false;
+        }
+        if (state.filters.tag && !(n.tags || []).includes(state.filters.tag)) return false;
+        if (state.filters.folder && n.folder !== state.filters.folder) return false;
+        return true;
+      });
+
+      filtered.forEach(n => {
+        const item = document.createElement('div');
+        item.className = 'note-item';
+        if (n.id === state.activeId) item.style.border = '1px solid rgba(0,122,255,0.12)';
+        item.innerHTML = `<div style="display:flex;gap:8px;align-items:center">
+        <div style="width:10px;height:10px;border-radius:50%;background:${(n.favorite ? '#ffbf00' : '#d0d6db')};"></div>
         <div style="flex:1">
           <div class="note-title">${n.title || suggestTitle(n.content)}</div>
-          <div class="note-meta"><div style="color:var(--muted)">${(n.content||'').slice(0,70).replace(/\n/g,' ')}${(n.content||'').length>70?'…':''}</div>
+          <div class="note-meta"><div style="color:var(--muted)">${(n.content || '').slice(0, 70).replace(/\n/g, ' ')}${(n.content || '').length > 70 ? '…' : ''}</div>
           <div style="display:flex;gap:8px;align-items:center">
             <div style="font-size:12px;color:var(--muted)">${new Date(n.modified).toLocaleString()}</div>
           </div></div>
         </div>
       </div>
       <div style="display:flex;gap:6px;align-items:center;margin-top:6px">
-        ${(n.tags||[]).map(t=>`<div class="tag-pill">${t}</div>`).join('')}
+        ${(n.tags || []).map(t => `<div class="tag-pill">${t}</div>`).join('')}
         <div style="margin-left:auto;display:flex;gap:8px">
-          <button class="btn ghost" data-id="${n.id}" data-action="pin">${n.pinned? 'Despin' : 'Pin'}</button>
+          <button class="btn ghost" data-id="${n.id}" data-action="pin">${n.pinned ? 'Despin' : 'Pin'}</button>
           <button class="btn ghost" data-id="${n.id}" data-action="del">Lixo</button>
         </div>
       </div>`;
-    item.onclick = (e)=>{
-      // ignore clicks on buttons inside
-      if(e.target.closest('button')) return;
-      state.activeId = n.id;
-      renderAll();
-    };
-    // action buttons
-    item.querySelectorAll('button').forEach(b=>{
-      b.onclick = (ev)=>{
-        ev.stopPropagation();
-        const id = b.dataset.id;
-        const action = b.dataset.action;
-        if(action==='pin'){ updateNote(id,{pinned: !state.notes.find(x=>x.id===id).pinned}); }
-        if(action==='del'){ if(confirm('Apagar esta nota?')) deleteNote(id); }
+        item.onclick = (e) => {
+          // ignore clicks on buttons inside
+          if (e.target.closest('button')) return;
+          state.activeId = n.id;
+          renderAll();
+        };
+        // action buttons
+        item.querySelectorAll('button').forEach(b => {
+          b.onclick = (ev) => {
+            ev.stopPropagation();
+            const id = b.dataset.id;
+            const action = b.dataset.action;
+            if (action === 'pin') { updateNote(id, { pinned: !state.notes.find(x => x.id === id).pinned }); }
+            if (action === 'del') { if (confirm('Apagar esta nota?')) deleteNote(id); }
+          }
+        });
+        list.appendChild(item);
+      });
+
+      // update stats
+      statNotes.textContent = `Notas: ${state.notes.length}`;
+      const tasksDone = state.notes.reduce((acc, n) => {
+        const m = (n.content || '').match(/- \[x\]/gi);
+        return acc + (m ? m.length : 0);
+      }, 0);
+      statTasks.textContent = `Tarefas concluídas: ${tasksDone}`;
+    }
+
+    /* ----------------------
+       RENDER: editor <-> preview sync
+       ---------------------- */
+    function renderPreview(content) {
+      // Simple markdown -> HTML (headers, bold, italics, code, lists, task lists)
+      let html = content
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+      // Headers
+      html = html.replace(/^###### (.*$)/gim, '<h6>$1</h6>')
+        .replace(/^##### (.*$)/gim, '<h5>$1</h5>')
+        .replace(/^#### (.*$)/gim, '<h4>$1</h4>')
+        .replace(/^### (.*$)/gim, '<h3>$1</h3>')
+        .replace(/^## (.*$)/gim, '<h2>$1</h2>')
+        .replace(/^# (.*$)/gim, '<h1>$1</h1>');
+
+      // Bold / italic
+      html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\*(.*?)\*/g, '<em>$1</em>')
+        .replace(/__(.*?)__/g, '<strong>$1</strong>')
+        .replace(/_(.*?)_/g, '<em>$1</em>');
+
+      // Inline code
+      html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+
+      // Task lists - detect "- [ ]" and "- [x]"
+      html = html.replace(/(^|\n)- \[ \] (.*?)($|\n)/g, '$1<label><input type="checkbox"> $2</label>$3');
+      html = html.replace(/(^|\n)- \[x\] (.*?)($|\n)/g, '$1<label><input type="checkbox" checked> <span style="text-decoration:line-through;color:var(--muted)">$2</span></label>$3');
+
+      // Bullet lists
+      html = html.replace(/(^|\n)- (.*?)($|\n)/g, '$1<ul><li>$2</li></ul>$3');
+      // merge adjacent ul tags
+      html = html.replace(/<\/ul>\s*<ul>/g, '');
+
+      // Paragraphs
+      html = html.replace(/\n{2,}/g, '</p><p>');
+      html = '<p>' + html + '</p>';
+      // clean empty p
+      html = html.replace(/<p>\s*<\/p>/g, '');
+
+      previewInner.innerHTML = html;
+
+      // attach checkbox events
+      previewInner.querySelectorAll('input[type="checkbox"]').forEach((cb, idx) => {
+        cb.onchange = () => {
+          // map back to content lines
+          const lines = editor.value.split('\n');
+          let count = 0;
+          for (let i = 0; i < lines.length; i++) {
+            if (/- \[( |x)\] /.test(lines[i])) {
+              if (count === idx) {
+                lines[i] = lines[i].replace(/- \[( |x)\]/, cb.checked ? '- [x] ' : '- [ ] ');
+                break;
+              }
+              count++;
+            }
+          }
+          editor.value = lines.join('\n');
+          scheduleSave();
+          renderPreview(editor.value);
+        };
+      });
+
+      // attach double tap to edit on mobile for preview
+      previewInner.ondblclick = () => { editor.focus(); };
+
+      // update meta: word count, read time
+      const words = (editor.value.match(/\b\w+\b/g) || []).length;
+      const minutes = Math.max(1, Math.round(words / 200));
+      q('readTime').textContent = `${words} palavras • ${minutes} min leitura`;
+    }
+
+    /* ----------------------
+       UI binding: load active note into editor
+       ---------------------- */
+    function loadActive() {
+      const note = state.notes.find(n => n.id === state.activeId) || state.notes[0];
+      if (!note) return;
+      state.activeId = note.id;
+      titleInput.value = note.title || suggestTitle(note.content);
+      editor.value = note.content || '';
+      renderPreview(editor.value);
+      // meta
+      metaRow.innerHTML = `<div style="font-weight:600">${note.title || suggestTitle(note.content)}</div>
+    <div style="color:var(--muted);font-size:13px">${new Date(note.modified).toLocaleString()}</div>
+    <div style="display:flex;gap:6px">${(note.tags || []).map(t => `<div class="tag-pill">${t}</div>`).join('')}</div>`;
+    }
+
+    /* ----------------------
+       RENDER EVERYTHING
+       ---------------------- */
+    function renderAll() {
+      renderSidebar();
+      renderNotesList();
+      loadActive();
+    }
+
+    /* ----------------------
+       EDITOR events: autosave, shortcuts, title suggestion
+       ---------------------- */
+    const scheduleSave = debounce(() => {
+      // apply content to active note, push version if significant change
+      const n = state.notes.find(x => x.id === state.activeId);
+      if (!n) return;
+      const old = n.content || '';
+      if (Math.abs(old.length - editor.value.length) > 8 || old !== editor.value) {
+        pushVersion(n);
+      }
+      n.content = editor.value;
+      n.title = titleInput.value || suggestTitle(editor.value);
+      n.tags = extractTags(editor.value);
+      n.modified = now();
+      saveApp();
+      renderNotesList();
+      renderPreview(editor.value);
+    }, AUTOSAVE_MS);
+
+    editor.addEventListener('input', () => { scheduleSave(); });
+    titleInput.addEventListener('input', () => { scheduleSave(); });
+
+    /* Keyboard shortcuts */
+    document.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'b') { // bold
+        e.preventDefault();
+        wrapSelection('**');
+      }
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'i') { // italic
+        e.preventDefault();
+        wrapSelection('*');
+      }
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') { // export quick
+        e.preventDefault();
+        exportAll();
+      }
+      if (e.key === 'Escape') {
+        if (zen.classList.contains('active')) toggleZen();
+      }
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+        toggleZen();
       }
     });
-    list.appendChild(item);
-  });
 
-  // update stats
-  statNotes.textContent = `Notas: ${state.notes.length}`;
-  const tasksDone = state.notes.reduce((acc,n)=> {
-    const m = (n.content||'').match(/- \[x\]/gi);
-    return acc + (m? m.length : 0);
-  },0);
-  statTasks.textContent = `Tarefas concluídas: ${tasksDone}`;
-}
-
-/* ----------------------
-   RENDER: editor <-> preview sync
-   ---------------------- */
-function renderPreview(content){
-  // Simple markdown -> HTML (headers, bold, italics, code, lists, task lists)
-  let html = content
-    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-
-  // Headers
-  html = html.replace(/^###### (.*$)/gim, '<h6>$1</h6>')
-             .replace(/^##### (.*$)/gim, '<h5>$1</h5>')
-             .replace(/^#### (.*$)/gim, '<h4>$1</h4>')
-             .replace(/^### (.*$)/gim, '<h3>$1</h3>')
-             .replace(/^## (.*$)/gim, '<h2>$1</h2>')
-             .replace(/^# (.*$)/gim, '<h1>$1</h1>');
-
-  // Bold / italic
-  html = html.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')
-             .replace(/\*(.*?)\*/g,'<em>$1</em>')
-             .replace(/__(.*?)__/g,'<strong>$1</strong>')
-             .replace(/_(.*?)_/g,'<em>$1</em>');
-
-  // Inline code
-  html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
-
-  // Task lists - detect "- [ ]" and "- [x]"
-  html = html.replace(/(^|\n)- \[ \] (.*?)($|\n)/g, '$1<label><input type="checkbox"> $2</label>$3');
-  html = html.replace(/(^|\n)- \[x\] (.*?)($|\n)/g, '$1<label><input type="checkbox" checked> <span style="text-decoration:line-through;color:var(--muted)">$2</span></label>$3');
-
-  // Bullet lists
-  html = html.replace(/(^|\n)- (.*?)($|\n)/g, '$1<ul><li>$2</li></ul>$3');
-  // merge adjacent ul tags
-  html = html.replace(/<\/ul>\s*<ul>/g, '');
-
-  // Paragraphs
-  html = html.replace(/\n{2,}/g, '</p><p>');
-  html = '<p>' + html + '</p>';
-  // clean empty p
-  html = html.replace(/<p>\s*<\/p>/g,'');
-
-  previewInner.innerHTML = html;
-
-  // attach checkbox events
-  previewInner.querySelectorAll('input[type="checkbox"]').forEach((cb,idx)=>{
-    cb.onchange = ()=>{
-      // map back to content lines
-      const lines = editor.value.split('\n');
-      let count=0;
-      for(let i=0;i<lines.length;i++){
-        if(/- \[( |x)\] /.test(lines[i])){
-          if(count===idx){
-            lines[i] = lines[i].replace(/- \[( |x)\]/, cb.checked ? '- [x] ' : '- [ ] ');
-            break;
-          }
-          count++;
-        }
-      }
-      editor.value = lines.join('\n');
+    /* text wrap helper */
+    function wrapSelection(sym) {
+      const el = editor;
+      const start = el.selectionStart, end = el.selectionEnd;
+      const selected = el.value.substring(start, end);
+      el.setRangeText(sym + selected + sym, start, end, 'end');
+      el.focus();
       scheduleSave();
-      renderPreview(editor.value);
-    };
-  });
-
-  // attach double tap to edit on mobile for preview
-  previewInner.ondblclick = ()=> { editor.focus(); };
-
-  // update meta: word count, read time
-  const words = (editor.value.match(/\b\w+\b/g) || []).length;
-  const minutes = Math.max(1, Math.round(words / 200));
-  q('readTime').textContent = `${words} palavras • ${minutes} min leitura`;
-}
-
-/* ----------------------
-   UI binding: load active note into editor
-   ---------------------- */
-function loadActive(){
-  const note = state.notes.find(n=>n.id===state.activeId) || state.notes[0];
-  if(!note) return;
-  state.activeId = note.id;
-  titleInput.value = note.title || suggestTitle(note.content);
-  editor.value = note.content || '';
-  renderPreview(editor.value);
-  // meta
-  metaRow.innerHTML = `<div style="font-weight:600">${note.title || suggestTitle(note.content)}</div>
-    <div style="color:var(--muted);font-size:13px">${new Date(note.modified).toLocaleString()}</div>
-    <div style="display:flex;gap:6px">${(note.tags||[]).map(t=>`<div class="tag-pill">${t}</div>`).join('')}</div>`;
-}
-
-/* ----------------------
-   RENDER EVERYTHING
-   ---------------------- */
-function renderAll(){
-  renderSidebar();
-  renderNotesList();
-  loadActive();
-}
-
-/* ----------------------
-   EDITOR events: autosave, shortcuts, title suggestion
-   ---------------------- */
-const scheduleSave = debounce(()=>{
-  // apply content to active note, push version if significant change
-  const n = state.notes.find(x=>x.id===state.activeId);
-  if(!n) return;
-  const old = n.content || '';
-  if(Math.abs(old.length - editor.value.length) > 8 || old !== editor.value){
-    pushVersion(n);
-  }
-  n.content = editor.value;
-  n.title = titleInput.value || suggestTitle(editor.value);
-  n.tags = extractTags(editor.value);
-  n.modified = now();
-  saveApp();
-  renderNotesList();
-  renderPreview(editor.value);
-}, AUTOSAVE_MS);
-
-editor.addEventListener('input', ()=>{ scheduleSave(); });
-titleInput.addEventListener('input', ()=>{ scheduleSave(); });
-
-/* Keyboard shortcuts */
-document.addEventListener('keydown', (e)=>{
-  if((e.ctrlKey || e.metaKey) && e.key.toLowerCase()==='b'){ // bold
-    e.preventDefault();
-    wrapSelection('**');
-  }
-  if((e.ctrlKey || e.metaKey) && e.key.toLowerCase()==='i'){ // italic
-    e.preventDefault();
-    wrapSelection('*');
-  }
-  if((e.ctrlKey || e.metaKey) && e.key.toLowerCase()==='s'){ // export quick
-    e.preventDefault();
-    exportAll();
-  }
-  if(e.key==='Escape'){
-    if(zen.classList.contains('active')) toggleZen();
-  }
-  if((e.ctrlKey || e.metaKey) && e.key==='Enter'){
-    toggleZen();
-  }
-});
-
-/* text wrap helper */
-function wrapSelection(sym){
-  const el = editor;
-  const start = el.selectionStart, end = el.selectionEnd;
-  const selected = el.value.substring(start,end);
-  el.setRangeText(sym + selected + sym, start, end, 'end');
-  el.focus();
-  scheduleSave();
-}
-
-/* ----------------------
-   New / delete / pin / favorites UI
-   ---------------------- */
-document.getElementById('btnNew').onclick = ()=> createNote();
-q('fabNew').onclick = ()=> createNote();
-document.getElementById('btnZen').onclick = toggleZen;
-document.getElementById('btnExport').onclick = exportActive;
-document.getElementById('btnShare').onclick = shareActive;
-
-searchInput.addEventListener('input', debounce((e)=>{
-  state.filters.q = e.target.value;
-  renderAll();
-}, 220));
-
-/* ----------------------
-   EXPORT / IMPORT / SHARE / CLEAR
-   ---------------------- */
-function exportActive(){
-  const n = state.notes.find(x=>x.id===state.activeId);
-  if(!n) { alert('Nenhuma nota ativa'); return; }
-  const blob = new Blob([n.content || ''], {type:'text/plain;charset=utf-8'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a'); a.href = url; a.download = (n.title || 'nota') + '.txt';
-  document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
-  microFeedback('save');
-}
-function exportAll(){
-  const data = JSON.stringify(state, null, 2);
-  const blob = new Blob([data], {type:'application/json'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a'); a.href = url; a.download = 'alma-notes-backup.json';
-  document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
-  microFeedback('save');
-}
-function importFromFile(file){
-  const reader = new FileReader();
-  reader.onload = ()=> {
-    try{
-      const parsed = safeParse(reader.result);
-      if(parsed && parsed.notes){
-        if(confirm('Importar este backup e substituir o actual?')) {
-          state = Object.assign(state, parsed);
-          saveApp();
-          renderAll();
-          alert('Importado ✅');
-        }
-      } else {
-        // maybe plain text -> create new note
-        if(confirm('Criar nova nota a partir do ficheiro?')) createNote({content: reader.result, title: reader.result.slice(0,60)});
-      }
-    }catch(e){ alert('Erro ao importar'); }
-  };
-  reader.readAsText(file);
-}
-
-/* drag-n-drop import */
-window.addEventListener('drop', (e)=>{
-  e.preventDefault();
-  if(e.dataTransfer.files.length) importFromFile(e.dataTransfer.files[0]);
-});
-window.addEventListener('dragover', e=>e.preventDefault());
-
-/* ----------------------
-   SHARING
-   ---------------------- */
-function shareActive(){
-  const note = state.notes.find(n=>n.id===state.activeId);
-  if(!note) return;
-  if(navigator.share){
-    navigator.share({title: note.title, text: note.content}).then(()=>microFeedback('share')).catch(()=>alert('Partilha cancelada'));
-  } else {
-    // fallback: copy to clipboard
-    navigator.clipboard.writeText(note.content).then(()=>{ alert('Conteúdo copiado para a área de transferência'); microFeedback('copy'); });
-  }
-}
-
-/* ----------------------
-   MICROFEEDBACK: som & vibração
-   ---------------------- */
-function microFeedback(type){
-  // type: create, delete, save, share, copy
-  try{
-    if(type==='create' || type==='save'){ playClick(); navigator.vibrate && navigator.vibrate(20); }
-    if(type==='delete'){ navigator.vibrate && navigator.vibrate([30,15,30]); }
-    if(type==='share'){ playClick(); navigator.vibrate && navigator.vibrate(10); }
-  }catch(e){}
-}
-function playClick(){
-  try{ clickSound.currentTime = 0; clickSound.play(); }catch(e){}
-}
-
-/* ----------------------
-   ZEN / FOCUS mode
-   ---------------------- */
-function toggleZen(){
-  if(zen.classList.contains('active')){
-    // exit: persist content back
-    zen.classList.remove('active');
-    editor.focus();
-  } else {
-    // enter: copy content to zenArea
-    zenArea.value = editor.value;
-    zen.classList.add('active');
-    zenArea.focus();
-    // when zenArea changes, reflect to main editor
-    zenArea.oninput = debounce(()=>{ editor.value = zenArea.value; scheduleSave(); renderPreview(editor.value); }, 300);
-  }
-}
-
-/* ----------------------
-   VERSION HISTORY UI (basic prompt)
-   ---------------------- */
-function showVersions(noteId){
-  const note = state.notes.find(n=>n.id===noteId);
-  if(!note || !(note.versions?.length)) { alert('Sem versões anteriores'); return; }
-  const sel = prompt('Versões:\n' + note.versions.map((v,i)=>`${i+1}: ${new Date(v.ts).toLocaleString()} - ${v.title}\n`).join('') + '\nDigita o número para restaurar:');
-  const idx = parseInt(sel) - 1;
-  if(idx>=0 && idx < note.versions.length){
-    if(confirm('Restaurar versão de ' + new Date(note.versions[idx].ts).toLocaleString() + '?')){
-      note.content = note.versions[idx].content;
-      note.title = note.versions[idx].title;
-      note.modified = now();
-      saveApp(); renderAll();
     }
-  }
-}
 
-/* ----------------------
-   POMODORO (simples)
-   ---------------------- */
-let pomodoro = {running:false, end:0, timer:null};
-function startPomodoro(minutes=25){
-  stopPomodoro();
-  pomodoro.running = true;
-  pomodoro.end = Date.now() + minutes*60000;
-  pomodoro.timer = setInterval(()=> {
-    const rem = pomodoro.end - Date.now();
-    if(rem <= 0){ stopPomodoro(); alert('Pomodoro terminado 🎉'); microFeedback('save'); }
-  },1000);
-}
-function stopPomodoro(){ clearInterval(pomodoro.timer); pomodoro.running=false; pomodoro.timer=null; }
+    /* ----------------------
+       New / delete / pin / favorites UI
+       ---------------------- */
+    document.getElementById('btnNew').onclick = () => createNote();
+    q('fabNew').onclick = () => createNote();
+    document.getElementById('btnZen').onclick = toggleZen;
+    document.getElementById('btnExport').onclick = exportActive;
+    document.getElementById('btnShare').onclick = shareActive;
 
-/* ----------------------
-   SWIPE TO DELETE (touch gestures)
-   ---------------------- */
-let touchStartX=0, touchCurrentId=null;
-document.addEventListener('touchstart', (e)=>{
-  const t = e.target.closest('.note-item');
-  if(!t) return;
-  touchStartX = e.touches[0].clientX;
-  touchCurrentId = t.querySelector('button[data-id]')?.dataset?.id || null;
-});
-document.addEventListener('touchend', (e)=>{
-  if(!touchCurrentId) return;
-  const dx = (e.changedTouches[0].clientX - touchStartX);
-  if(dx < -80){ // swipe left
-    if(confirm('Apagar nota deslizando?')) deleteNote(touchCurrentId);
-  }
-  touchCurrentId = null;
-});
+    searchInput.addEventListener('input', debounce((e) => {
+      state.filters.q = e.target.value;
+      renderAll();
+    }, 220));
 
-/* ----------------------
-   AUTOBACKUP interval
-   ---------------------- */
-function startAutoBackup(){
-  if(state.backupTimer) clearInterval(state.backupTimer);
-  state.backupTimer = setInterval(()=>{ performBackup(); }, BACKUP_INTERVAL_MIN * 60000);
-}
+    /* ----------------------
+       EXPORT / IMPORT / SHARE / CLEAR
+       ---------------------- */
+    function exportActive() {
+      const n = state.notes.find(x => x.id === state.activeId);
+      if (!n) { alert('Nenhuma nota ativa'); return; }
+      const blob = new Blob([n.content || ''], { type: 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href = url; a.download = (n.title || 'nota') + '.txt';
+      document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+      microFeedback('save');
+    }
+    function exportAll() {
+      const data = JSON.stringify(state, null, 2);
+      const blob = new Blob([data], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href = url; a.download = 'alma-notes-backup.json';
+      document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+      microFeedback('save');
+    }
+    function importFromFile(file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const parsed = safeParse(reader.result);
+          if (parsed && parsed.notes) {
+            if (confirm('Importar este backup e substituir o actual?')) {
+              state = Object.assign(state, parsed);
+              saveApp();
+              renderAll();
+              alert('Importado ✅');
+            }
+          } else {
+            // maybe plain text -> create new note
+            if (confirm('Criar nova nota a partir do ficheiro?')) createNote({ content: reader.result, title: reader.result.slice(0, 60) });
+          }
+        } catch (e) { alert('Erro ao importar'); }
+      };
+      reader.readAsText(file);
+    }
 
-/* ----------------------
-   BOOT: load & render
-   ---------------------- */
-loadApp();
-renderAll();
-startAutoBackup();
+    /* drag-n-drop import */
+    window.addEventListener('drop', (e) => {
+      e.preventDefault();
+      if (e.dataTransfer.files.length) importFromFile(e.dataTransfer.files[0]);
+    });
+    window.addEventListener('dragover', e => e.preventDefault());
 
-/* ----------------------
-   PWA: manifest + service worker (generated via Blob to keep single file)
-   ---------------------- */
-(async function setupPWA(){
-  // manifest
-  const manifest = {
-    "name":"Alma — Notas",
-    "short_name":"Alma",
-    "start_url":".",
-    "display":"standalone",
-    "background_color":"#ffffff",
-    "theme_color":"#ffffff",
-    "icons":[
-      {"src":"data:image/svg+xml;utf8," + encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' width='512' height='512'><rect rx='90' width='512' height='512' fill='%23007aff'/><text x='50%' y='54%' font-size='260' text-anchor='middle' fill='white' font-family='Arial' font-weight='700'>A</text></svg>`), "sizes":"512x512", "type":"image/svg+xml"}
-    ]
-  };
-  const manBlob = new Blob([JSON.stringify(manifest)], {type:'application/json'});
-  const manURL = URL.createObjectURL(manBlob);
-  const link = document.createElement('link'); link.rel = 'manifest'; link.href = manURL;
-  document.head.appendChild(link);
+    /* ----------------------
+       SHARING
+       ---------------------- */
+    function shareActive() {
+      const note = state.notes.find(n => n.id === state.activeId);
+      if (!note) return;
+      if (navigator.share) {
+        navigator.share({ title: note.title, text: note.content }).then(() => microFeedback('share')).catch(() => alert('Partilha cancelada'));
+      } else {
+        // fallback: copy to clipboard
+        navigator.clipboard.writeText(note.content).then(() => { alert('Conteúdo copiado para a área de transferência'); microFeedback('copy'); });
+      }
+    }
 
-  // service worker script (simple offline caching)
-  const swCode = `
+    /* ----------------------
+       MICROFEEDBACK: som & vibração
+       ---------------------- */
+    function microFeedback(type) {
+      // type: create, delete, save, share, copy
+      try {
+        if (type === 'create' || type === 'save') { playClick(); navigator.vibrate && navigator.vibrate(20); }
+        if (type === 'delete') { navigator.vibrate && navigator.vibrate([30, 15, 30]); }
+        if (type === 'share') { playClick(); navigator.vibrate && navigator.vibrate(10); }
+      } catch (e) { }
+    }
+    function playClick() {
+      try { clickSound.currentTime = 0; clickSound.play(); } catch (e) { }
+    }
+
+    /* ----------------------
+       ZEN / FOCUS mode
+       ---------------------- */
+    function toggleZen() {
+      if (zen.classList.contains('active')) {
+        // exit: persist content back
+        zen.classList.remove('active');
+        editor.focus();
+      } else {
+        // enter: copy content to zenArea
+        zenArea.value = editor.value;
+        zen.classList.add('active');
+        zenArea.focus();
+        // when zenArea changes, reflect to main editor
+        zenArea.oninput = debounce(() => { editor.value = zenArea.value; scheduleSave(); renderPreview(editor.value); }, 300);
+      }
+    }
+
+    /* ----------------------
+       VERSION HISTORY UI (basic prompt)
+       ---------------------- */
+    function showVersions(noteId) {
+      const note = state.notes.find(n => n.id === noteId);
+      if (!note || !(note.versions?.length)) { alert('Sem versões anteriores'); return; }
+      const sel = prompt('Versões:\n' + note.versions.map((v, i) => `${i + 1}: ${new Date(v.ts).toLocaleString()} - ${v.title}\n`).join('') + '\nDigita o número para restaurar:');
+      const idx = parseInt(sel) - 1;
+      if (idx >= 0 && idx < note.versions.length) {
+        if (confirm('Restaurar versão de ' + new Date(note.versions[idx].ts).toLocaleString() + '?')) {
+          note.content = note.versions[idx].content;
+          note.title = note.versions[idx].title;
+          note.modified = now();
+          saveApp(); renderAll();
+        }
+      }
+    }
+
+    /* ----------------------
+       POMODORO (simples)
+       ---------------------- */
+    let pomodoro = { running: false, end: 0, timer: null };
+    function startPomodoro(minutes = 25) {
+      stopPomodoro();
+      pomodoro.running = true;
+      pomodoro.end = Date.now() + minutes * 60000;
+      pomodoro.timer = setInterval(() => {
+        const rem = pomodoro.end - Date.now();
+        if (rem <= 0) { stopPomodoro(); alert('Pomodoro terminado 🎉'); microFeedback('save'); }
+      }, 1000);
+    }
+    function stopPomodoro() { clearInterval(pomodoro.timer); pomodoro.running = false; pomodoro.timer = null; }
+
+    /* ----------------------
+       SWIPE TO DELETE (touch gestures)
+       ---------------------- */
+    let touchStartX = 0, touchCurrentId = null;
+    document.addEventListener('touchstart', (e) => {
+      const t = e.target.closest('.note-item');
+      if (!t) return;
+      touchStartX = e.touches[0].clientX;
+      touchCurrentId = t.querySelector('button[data-id]')?.dataset?.id || null;
+    });
+    document.addEventListener('touchend', (e) => {
+      if (!touchCurrentId) return;
+      const dx = (e.changedTouches[0].clientX - touchStartX);
+      if (dx < -80) { // swipe left
+        if (confirm('Apagar nota deslizando?')) deleteNote(touchCurrentId);
+      }
+      touchCurrentId = null;
+    });
+
+    /* ----------------------
+       AUTOBACKUP interval
+       ---------------------- */
+    function startAutoBackup() {
+      if (state.backupTimer) clearInterval(state.backupTimer);
+      state.backupTimer = setInterval(() => { performBackup(); }, BACKUP_INTERVAL_MIN * 60000);
+    }
+
+    /* ----------------------
+       BOOT: load & render
+       ---------------------- */
+    loadApp();
+    renderAll();
+    startAutoBackup();
+
+    /* ----------------------
+       PWA: manifest + service worker (generated via Blob to keep single file)
+       ---------------------- */
+    (async function setupPWA() {
+      // manifest
+      const manifest = {
+        "name": "Alma — Notas",
+        "short_name": "Alma",
+        "start_url": ".",
+        "display": "standalone",
+        "background_color": "#ffffff",
+        "theme_color": "#ffffff",
+        "icons": [
+          { "src": "data:image/svg+xml;utf8," + encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' width='512' height='512'><rect rx='90' width='512' height='512' fill='%23007aff'/><text x='50%' y='54%' font-size='260' text-anchor='middle' fill='white' font-family='Arial' font-weight='700'>A</text></svg>`), "sizes": "512x512", "type": "image/svg+xml" }
+        ]
+      };
+      const manBlob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
+      const manURL = URL.createObjectURL(manBlob);
+      const link = document.createElement('link'); link.rel = 'manifest'; link.href = manURL;
+      document.head.appendChild(link);
+
+      // service worker script (simple offline caching)
+      const swCode = `
     const CACHE = 'alma-cache-v1';
     const OFFLINE = [
       '/',
@@ -941,83 +1221,128 @@ startAutoBackup();
       e.respondWith(caches.match(e.request).then(r=>r || fetch(e.request)));
     });
   `;
-  try{
-    const swBlob = new Blob([swCode], {type:'application/javascript'});
-    const swURL = URL.createObjectURL(swBlob);
-    if('serviceWorker' in navigator){
-      navigator.serviceWorker.register(swURL).then(()=> console.log('SW registered')).catch(e=>console.warn('SW failed', e));
+      try {
+        const swBlob = new Blob([swCode], { type: 'application/javascript' });
+        const swURL = URL.createObjectURL(swBlob);
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.register(swURL).then(() => console.log('SW registered')).catch(e => console.warn('SW failed', e));
+        }
+      } catch (e) { console.warn('PWA setup failed', e); }
+    })();
+
+    /* ----------------------
+       IMPORT via button (drag-drop handled above)
+       ---------------------- */
+    document.addEventListener('paste', (e) => {
+      // quick import JSON pasted
+      const text = (e.clipboardData || window.clipboardData).getData('text');
+      if (text && text.trim().startsWith('{') && text.includes('notes')) {
+        if (confirm('Colar backup JSON e substituir?')) {
+          try { state = JSON.parse(text); saveApp(); renderAll(); alert('Importado'); } catch (e) { alert('Erro'); }
+        }
+      }
+    });
+
+    /* ----------------------
+       EXPORT/IMPORT UI via keyboard 'I' and 'E'
+       ---------------------- */
+    document.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'e') { e.preventDefault(); exportAll(); }
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'i') { e.preventDefault(); q('fileImport').click(); }
+    });
+
+    /* ----------------------
+       Small UI: hidden input for file import (to keep single file)
+       ---------------------- */
+    const fileImport = document.createElement('input');
+    fileImport.type = 'file'; fileImport.id = 'fileImport'; fileImport.accept = '.json,.txt'; fileImport.style.display = 'none';
+    fileImport.onchange = () => importFromFile(fileImport.files[0]);
+    document.body.appendChild(fileImport);
+
+    /* ----------------------
+       Version restore via context menu on preview (right-click)
+       ---------------------- */
+    previewInner.addEventListener('contextmenu', (e) => {
+      e.preventDefault();
+      if (!state.activeId) return;
+      if (confirm('Ver histórico de versões?')) showVersions(state.activeId);
+    });
+
+    /* ----------------------
+       Small polish: animations on new note
+       ---------------------- */
+    function pulseNew() {
+      const btn = document.getElementById('btnNew');
+      btn.classList.add('bounce');
+      setTimeout(() => btn.classList.remove('bounce'), 360);
     }
-  }catch(e){ console.warn('PWA setup failed', e); }
-})();
+    document.getElementById('btnNew').addEventListener('click', pulseNew);
 
-/* ----------------------
-   IMPORT via button (drag-drop handled above)
-   ---------------------- */
-document.addEventListener('paste', (e)=>{
-  // quick import JSON pasted
-  const text = (e.clipboardData || window.clipboardData).getData('text');
-  if(text && text.trim().startsWith('{') && text.includes('notes')){
-    if(confirm('Colar backup JSON e substituir?')) {
-      try{ state = JSON.parse(text); saveApp(); renderAll(); alert('Importado'); }catch(e){ alert('Erro'); }
+    /* ----------------------
+       Periodic autosave + push version checkpoint
+       ---------------------- */
+    setInterval(() => {
+      // checkpoint small autosave
+      const n = state.notes.find(x => x.id === state.activeId);
+      if (n && n.content !== editor.value) {
+        n.content = editor.value;
+        n.title = titleInput.value || suggestTitle(editor.value);
+        n.modified = now();
+        pushVersion(n);
+        saveApp();
+      }
+    }, 60000); // cada 60s
+
+    /* Expose some helpers to window for debugging (safe) */
+    window.alma = {
+      state, createNote, deleteNote, exportAll, performBackup, loadApp
+    };
+  </script>
+
+  <script>
+    /* ==========================================
+       Alternância automática Editor <-> Preview
+       ========================================== */
+
+    const editorWrap = document.querySelector('.editor-wrap');
+    let typingTimer;
+
+    function startPreviewTimer() {
+      clearTimeout(typingTimer);
+      typingTimer = setTimeout(() => {
+        editorWrap.classList.add('show-preview');
+      }, 2000);
     }
-  }
-});
 
-/* ----------------------
-   EXPORT/IMPORT UI via keyboard 'I' and 'E'
-   ---------------------- */
-document.addEventListener('keydown', (e)=>{
-  if((e.ctrlKey||e.metaKey) && e.key.toLowerCase()==='e'){ e.preventDefault(); exportAll(); }
-  if((e.ctrlKey||e.metaKey) && e.key.toLowerCase()==='i'){ e.preventDefault(); q('fileImport').click(); }
-});
+    editor.addEventListener('input', () => {
+      clearTimeout(typingTimer);
+      editorWrap.classList.remove('show-preview');
+      startPreviewTimer();
+    });
 
-/* ----------------------
-   Small UI: hidden input for file import (to keep single file)
-   ---------------------- */
-const fileImport = document.createElement('input');
-fileImport.type='file'; fileImport.id='fileImport'; fileImport.accept='.json,.txt'; fileImport.style.display='none';
-fileImport.onchange = ()=> importFromFile(fileImport.files[0]);
-document.body.appendChild(fileImport);
+    editor.addEventListener('focus', () => {
+      clearTimeout(typingTimer);
+      editorWrap.classList.remove('show-preview');
+    });
 
-/* ----------------------
-   Version restore via context menu on preview (right-click)
-   ---------------------- */
-previewInner.addEventListener('contextmenu', (e)=>{
-  e.preventDefault();
-  if(!state.activeId) return;
-  if(confirm('Ver histórico de versões?')) showVersions(state.activeId);
-});
+    // Clique no preview → só volta ao editor se NÃO for numa checkbox
+    q('previewInner').addEventListener('click', (e) => {
+      if (e.target.tagName.toLowerCase() === 'input' && e.target.type === 'checkbox') {
+        // clicou numa checkbox — não alterna para o editor
+        return;
+      }
+      editorWrap.classList.remove('show-preview');
+      editor.focus();
+      clearTimeout(typingTimer);
+    });
 
-/* ----------------------
-   Small polish: animations on new note
-   ---------------------- */
-function pulseNew(){
-  const btn = document.getElementById('btnNew');
-  btn.classList.add('bounce');
-  setTimeout(()=>btn.classList.remove('bounce'), 360);
-}
-document.getElementById('btnNew').addEventListener('click', pulseNew);
+    // inicia o timer automaticamente ao carregar
+    window.addEventListener('load', () => {
+      startPreviewTimer();
+    });
+  </script>
 
-/* ----------------------
-   Periodic autosave + push version checkpoint
-   ---------------------- */
-setInterval(()=> {
-  // checkpoint small autosave
-  const n = state.notes.find(x=>x.id===state.activeId);
-  if(n && n.content !== editor.value){
-    n.content = editor.value;
-    n.title = titleInput.value || suggestTitle(editor.value);
-    n.modified = now();
-    pushVersion(n);
-    saveApp();
-  }
-}, 60000); // cada 60s
-
-/* Expose some helpers to window for debugging (safe) */
-window.alma = {
-  state, createNote, deleteNote, exportAll, performBackup, loadApp
-};
-</script>
 
 </body>
+
 </html>
